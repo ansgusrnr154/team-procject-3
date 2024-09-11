@@ -1,64 +1,52 @@
-// src/pages/Login.js
-import React, { useState } from 'react';
-import { AuthenticationDetails, CognitoUser } from 'amazon-cognito-identity-js';
-import UserPool from '../cognitoConfig';
 
-const Login = () => {
-  const [email, setEmail] = useState('');
-  const [password, setPassword] = useState('');
+import React from 'react';
 
-  const handleSubmit = (e) => {
-    e.preventDefault();
-
-    const userData = {
-      Username: email,
-      Pool: UserPool
-    };
-
-    const cognitoUser = new CognitoUser(userData);
-    const authenticationDetails = new AuthenticationDetails({
-      Username: email,
-      Password: password
-    });
-
-    cognitoUser.authenticateUser(authenticationDetails, {
-      onSuccess: (result) => {
-        console.log('Login successful:', result);
-        const token = result.getIdToken().getJwtToken();
-        localStorage.setItem('token', token);
-        alert('Login successful!');
-      },
-      onFailure: (err) => {
-        console.error('Login error:', err);
-        alert('Login failed.');
-      }
-    });
+const Login = ({ onClose }) => {
+  const modalStyles = {
+    modalOverlay: {
+      position: 'fixed',
+      top: 0,
+      left: 0,
+      right: 0,
+      bottom: 0,
+      backgroundColor: 'rgba(0, 0, 0, 0.5)',
+      display: 'flex',
+      justifyContent: 'center',
+      alignItems: 'center',
+      zIndex: 1000
+    },
+    modalContent: {
+      backgroundColor: 'white',
+      padding: '20px',
+      borderRadius: '10px',
+      width: '400px',
+      textAlign: 'center'
+    },
+    closeButton: {
+      position: 'absolute',
+      top: '10px',
+      right: '10px',
+      cursor: 'pointer'
+    }
   };
 
   return (
-    <div>
-      <h1>Login</h1>
-      <form onSubmit={handleSubmit}>
-        <div>
-          <label>Email:</label>
-          <input
-            type="email"
-            value={email}
-            onChange={(e) => setEmail(e.target.value)}
-            required
-          />
-        </div>
-        <div>
-          <label>Password:</label>
-          <input
-            type="password"
-            value={password}
-            onChange={(e) => setPassword(e.target.value)}
-            required
-          />
-        </div>
-        <button type="submit">Login</button>
-      </form>
+    <div style={modalStyles.modalOverlay} onClick={onClose}>
+      <div style={modalStyles.modalContent} onClick={e => e.stopPropagation()}>
+        <button style={modalStyles.closeButton} onClick={onClose}>X</button>
+        <h2>Login</h2>
+        <form>
+          <div>
+            <label>Email:</label>
+            <input type="email" required />
+          </div>
+          <div>
+            <label>Password:</label>
+            <input type="password" required />
+          </div>
+          <button type="submit">Login</button>
+        </form>
+      </div>
     </div>
   );
 };

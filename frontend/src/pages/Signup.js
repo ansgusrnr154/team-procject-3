@@ -1,79 +1,52 @@
-// src/pages/Signup.js
-import React, { useState } from 'react';
-import UserPool from '../cognitoConfig';
+
+import React from 'react';
 
 const Signup = () => {
-  const [email, setEmail] = useState('');
-  const [password, setPassword] = useState('');
-  const [confirmationCode, setConfirmationCode] = useState('');
-  const [isConfirmed, setIsConfirmed] = useState(false);
-
-  const handleSubmit = (e) => {
-    e.preventDefault();
-
-    UserPool.signUp(email, password, [], null, (err, data) => {
-      if (err) {
-        console.error('Signup error:', err);
-      } else {
-        console.log('Signup successful:', data);
-        setIsConfirmed(true);
-      }
-    });
-  };
-
-  const confirmUser = (e) => {
-    e.preventDefault();
-    const userData = { Username: email, Pool: UserPool };
-    const cognitoUser = new CognitoUser(userData);
-    cognitoUser.confirmRegistration(confirmationCode, true, (err, result) => {
-      if (err) {
-        console.error('Confirmation error:', err);
-      } else {
-        console.log('Confirmation successful:', result);
-        alert('Signup confirmed successfully!');
-      }
-    });
+  const modalStyles = {
+    modalOverlay: {
+      position: 'fixed',
+      top: 0,
+      left: 0,
+      right: 0,
+      bottom: 0,
+      backgroundColor: 'rgba(0, 0, 0, 0.5)',
+      display: 'flex',
+      justifyContent: 'center',
+      alignItems: 'center',
+      zIndex: 1000
+    },
+    modalContent: {
+      backgroundColor: 'white',
+      padding: '20px',
+      borderRadius: '10px',
+      width: '400px',
+      textAlign: 'center'
+    },
+    closeButton: {
+      position: 'absolute',
+      top: '10px',
+      right: '10px',
+      cursor: 'pointer'
+    }
   };
 
   return (
-    <div>
-      <h1>Sign Up</h1>
-      {!isConfirmed ? (
-        <form onSubmit={handleSubmit}>
+    <div style={modalStyles.modalOverlay}>
+      <div style={modalStyles.modalContent}>
+        <button style={modalStyles.closeButton} onClick={() => window.history.back()}>X</button>
+        <h2>Sign Up</h2>
+        <form>
           <div>
             <label>Email:</label>
-            <input
-              type="email"
-              value={email}
-              onChange={(e) => setEmail(e.target.value)}
-              required
-            />
+            <input type="email" required />
           </div>
           <div>
             <label>Password:</label>
-            <input
-              type="password"
-              value={password}
-              onChange={(e) => setPassword(e.target.value)}
-              required
-            />
+            <input type="password" required />
           </div>
           <button type="submit">Sign Up</button>
         </form>
-      ) : (
-        <form onSubmit={confirmUser}>
-          <div>
-            <label>Confirmation Code:</label>
-            <input
-              type="text"
-              value={confirmationCode}
-              onChange={(e) => setConfirmationCode(e.target.value)}
-              required
-            />
-          </div>
-          <button type="submit">Confirm Signup</button>
-        </form>
-      )}
+      </div>
     </div>
   );
 };

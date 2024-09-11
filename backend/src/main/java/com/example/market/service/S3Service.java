@@ -22,10 +22,11 @@ public class S3Service {
 
     public S3Service() {
         this.s3Client = S3Client.builder()
-                .region(Region.US_WEST_2)
+                .region(Region.AP_NORTHEAST_2)  // 서울 리전으로 변경
                 .credentialsProvider(ProfileCredentialsProvider.create())
                 .build();
     }
+
 
     public String uploadFile(String filePath) {
         File file = Paths.get(filePath).toFile();

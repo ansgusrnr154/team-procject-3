@@ -1,5 +1,5 @@
 // src/pages/ProductRegister.js
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useContext } from 'react'; // useContext 추가
 import api from '../utils/axiosConfig';
 import { useHistory } from 'react-router-dom';
 import { ErrorContext } from '../context/ErrorContext';
